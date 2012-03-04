@@ -1,0 +1,150 @@
+$def with(params)
+<html>
+	<head>
+
+    <title>个人导航</title>
+
+		<link rel="shortcut icon" href="static/images/favicon.ico" type="image/vnd.microsoft.icon">
+		<link rel="icon" href="static/images/favicon.ico" type="image/vnd.microsoft.icon">
+
+		<script type="text/javascript" src="/static/js/jquery.js"></script>
+		<script type="text/javascript" src="/static/js/fancyzoom.js"></script>
+
+        <script type="text/javascript">
+                var q = jQuery;
+                var hidden = true;
+
+                function search() {
+                        var param = q("#search_param").attr("value");
+
+                        window.open("http://www.google.com.hk/search?q=" + param + "&ie=UTF-8&oe=UTF-8&hl=zh-CN&btnG=+Search+","_blank");
+                }
+
+
+                function enterToSearch(event) {
+                        if (event.keyCode == 13) {
+                                search();
+                        }
+                }
+
+
+    			function dofresh_data() {
+    
+    				q.post(
+    					"refresh",
+    					function(data, textStatus) {
+    						location.reload();
+    					}
+    				);
+    
+    			}
+
+        </script>
+		
+		<style  type="text/css">
+			.ul_nobr {list-style: none;margin: 0px;padding: 0px;}
+			.ul_nobr li {display:inline;background-color: #ccd;margin: 0px 20px 10px 0px;}  
+		</style>
+
+
+        	<link rel="stylesheet" media="all" type="text/css" href="/static/css/all.css" />
+        	<link rel="stylesheet" media="screen" type="text/css" href="/static/css/screen.css" />
+        	<link rel="stylesheet" media="print" type="text/css" href="/static/css/print.css" />
+
+
+	</head>
+<body>
+  <div class="dokuwiki">
+    <div class="stylehead">
+    <div class="header">
+    <DIV style="width:200px; white-space : nowrap;">
+    <UL class="ul_nobr">
+      <LI class="start "><A href="http://weibo.com/"  target="_blank" >新浪微博</A> </LI>
+      <LI class=current><A href="http://www.taobao.com/"  target="_blank" >淘宝网</A> </LI>
+      <LI><A href="http://www.tmall.com/"  target="_blank" >淘宝商城</A> </LI>
+      <LI><A href="http://ju.taobao.com/"  target="_blank" >聚划算</A> </LI>
+      <LI><A href="http://www.etao.com/"  target="_blank" >一淘</A> </LI>
+      <LI><A href="https://www.alipay.com/"  target="_blank" >支付宝</A> </LI>
+      <LI><A href="http://www.360buy.com/"  target="_blank" >京东商城</A> </LI>
+      <LI><A href="http://www.kiees.cn/"  target="_blank" >查快递</A> </LI>
+      <LI><A href="http://www.youku.com/"  target="_blank" >优酷网</A> </LI>
+      <LI><A href="http://www.douban.com/"  target="_blank" >豆瓣</A> </LI>
+      <LI><A href="http://www.qunar.com/"  target="_blank" >去哪儿</A> 
+      <LI></LI>
+   </UL>
+    </DIV>
+    </DIV>
+    </DIV>
+	<div class="page">
+        	<!-- page start -->
+                <h1><a name="首页" id="导航">导航</a></h1>
+                <div class="level1"></div>
+                <h2><a name="欢迎" id="欢迎">欢迎</a></h2>
+                <div class="level2">
+                    <p>
+                        <div class="wiki-box-header" style="position:relative">
+                    </p>
+                    <div class="templater">
+                        <p>
+                            <img src="/static/images/logo.jpg" class="media" alt="" /><span class="slogan">欢迎来导航页面,推荐使用Chrome or FireFox</span>
+                            <sup style="color:#ffaa22">
+                                Beta
+                            </sup>
+														
+                       </p>
+                        </p>
+                        <hr/>
+                        <p>
+                            <div class="search-col">
+
+                                    <label style="font-weight:bold;color:#404040">
+                                        &nbsp;谷歌搜索：<input type="text" autofocus id="search_param" name="search_param" onkeypress="enterToSearch(event)" class="edit" style="width:250px;" placeholder="请输入关键字...">
+                                    </label>
+                                    <input class="lsb" type="submit" name="btnG" value=" Search" onclick="search()" />
+
+                            </div>
+                        </p>
+
+                    </div>
+                </div>
+
+
+        <hr>
+
+
+    $for key,value in params.urls.items():
+	<h2><a name="常用链接" id="常用链接">常用链接</a></h2>
+	<div class="level2">
+		<div class="wiki-box">
+        <div class="hd">
+        $for k,v in value.items():
+            $k
+            </div>
+            <div class="templater">
+            <ul>
+			    $for link in v:
+                            <li class="level1">
+                                <div class="li">
+                                    <a href="$link[0]" class="wikilink1" title="$link[1]"  class="urlextern" target="_blank">$link[2]</a>
+                                </div>
+                            </li>
+	        </ul>
+			</div>
+		</div>
+	</div>
+
+
+
+
+    </div>
+    <hr>
+    <div class="clearer">
+        &nbsp;
+    </div>
+    <div class="stylefoot">
+	<div class="footerinc">
+	    Copyright &copy;captain_miao 版权所有 <a href="http://weibo.com/cmiao"  target="_blank" >Weibo</a>&nbsp;</a> <a href="http://nobugs.sinaapp.com/"  target="_blank" >Blog</a> &nbsp;<a href="/elink"  target="_blank" >导航管理</a>&nbsp; <a href="javascript:dofresh_data()">刷新内存</a>
+	</div>
+    </div>
+    </body>
+</html>

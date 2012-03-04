@@ -1,0 +1,270 @@
+$def with(params)
+<html>
+	<head>
+		<title>导航管理页</title>
+		<link rel="shortcut icon" href="static/images/favicon.ico" type="image/vnd.microsoft.icon">
+		<link rel="icon" href="static/images/favicon.ico" type="image/vnd.microsoft.icon">
+
+		<script type="text/javascript" src="/static/js/jquery.js"></script>
+		<script type="text/javascript" src="/static/js/fancyzoom.js"></script>
+		<script type="text/javascript">
+			var q = jQuery;
+			var hidden = true;
+			
+			q(document).ready(function() {
+				fancyZoom("add");
+				fancyZoom("update");
+				fancyZoom("addGroup");
+				fancyZoom("updateGroup");
+			});
+			
+			function fancyZoom(id) {
+				q("*[name='" + id + "']").each(function() {
+					q(this).fancyZoom({directory: "/static/images/"});
+				})
+			}
+
+
+			function getValue(id) {
+                                var obj = q(id);
+                                if (obj.attr("type") == "checkbox") {
+                                        return obj.attr("checked");
+                                }
+                                return q(id).val();
+                        }
+
+			function saveLink() {
+				var linkName = q("#zoom_content #alinkName").val();
+				var linkUrl = q("#zoom_content #alinkUrl").val();
+				var gid = q("#zoom_content #agid").val();
+				var title = q("#zoom_content #alinkComment").val();
+				q.post(
+					"addLink",
+					{"name":linkName, "url":linkUrl, "gid":gid, "title":title},
+					function(data, textStatus) {
+						location.reload();
+					}
+				)
+			}
+
+			function saveGroup() {
+				var name = q("#zoom_content #agroupName").val();
+				var gid = q("#zoom_content #agroupId").val();
+				q.post(
+					"addGroup",
+					{"name":name, "gid":gid},
+					function(data, textStatus) {
+						location.reload();
+					}
+				)
+			}
+
+
+			function doDelete(gid, id) {
+				if (confirm('你，确定、一定以及肯定要删除吗？'))
+				{
+					q.post(
+						"delete",
+						{"gid":gid, "id":id},
+						function(data, textStatus) {
+							location.reload();
+						}
+					);
+				}
+			}
+
+			function doGroupDelete(gid, id) {
+				if (confirm('你，确定、一定以及肯定要删除吗？'))
+				{
+					q.post(
+						"delGroup",
+						{"gid":gid, "id":id},
+						function(data, textStatus) {
+							location.reload();
+						}
+					);
+				}
+			}
+
+			function dofresh_data() {
+
+				q.post(
+					"refresh",
+					function(data, textStatus) {
+						location.reload();
+					}
+				);
+
+			}
+
+			function showUpGroupForm(gid,name,id) {
+				q("#update_group #upid").attr("value", id);
+				q("#update_group #upGroupId").attr("value", gid);
+				q("#update_group #upGroupName").attr("value",name);
+				q("*[name='updateGroup']").click();
+			}
+			
+			function showUpdateForm(url,name,title,gid,id) {
+				q("#update_form #uid").attr("value", id);
+				q("#update_form #ugid").attr("value", gid);
+				q("#update_form #ulinkName").attr("value",name);
+				q("#update_form #ulinkUrl").attr("value",url);
+				q("#update_form #ulinkComment").html(title)
+				q("*[name='update']").click();
+			}			
+			
+			
+			
+			function updateLink() {
+				var id = q("#zoom_content #uid").val();
+				var gid = q("#zoom_content #ugid").val();
+				var linkName = q("#zoom_content #ulinkName").val();
+				var linkUrl = q("#zoom_content #ulinkUrl").val();
+				var title = q("#zoom_content #ulinkComment").val();
+				q.post(
+					"updateLink",
+					{ "id":id, "gid":gid, "name":linkName, "url":linkUrl, "title":title },
+					function(data, textStatus) {
+						location.reload();
+					}
+				);
+			}
+
+
+			function upGroup() {
+			    var id = q("#zoom_content #upid").val();
+				var gid = q("#zoom_content #upGroupId").val();
+				var name = q("#zoom_content #upGroupName").val();
+
+				q.post(
+					"upGroup",
+					{ "id":id, "gid":gid, "name":name},
+					function(data, textStatus) {
+						location.reload();
+					}
+				);
+			}
+
+
+		</script>
+		<link rel="stylesheet" href="/static/css/common.css" type="text/css" /> 
+		<style>
+			.list {
+				border-collapse:collapse;
+			}
+			.list th {
+				color:#7777dd;
+			}
+			.list th, .list td {
+				border: 1px solid #7777dd;
+				padding: 4px 4px 4px 4px;
+				text-align:center;
+			}
+			.selector {
+				position:relative;
+				width:130px;
+				float:left;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="add_form">
+			<table>
+                <input type="hidden" id="aid" />
+				<tr><td>groupId: </td>
+				    <td>
+    					<select id="agid" >
+                                    $for s in params.groups:				    
+                                        <option value="$s[1]">$s[0]</option>
+    				</select>
+				    </td>
+				</tr>
+                <tr><td>linkName:</td><td><input type="text" id="alinkName" /></td></tr>
+                <tr><td>linkUrl: </td><td><input type="text" id="alinkUrl" /></td></tr>
+                <tr><td>descripton:</td><td><textarea id="alinkComment"></textarea></td></tr>
+				<tr><td><input type="button" value="save" onclick="saveLink()" /></td></tr>
+			</table>
+		</div>
+
+		<div id="add_group">
+			<table>
+                <tr><td>groupId:</td><td><input type="text" id="agroupId" /></td></tr>
+                <tr><td>groupName:</td><td><input type="text" id="agroupName" /></td></tr>
+				<tr><td><input type="button" value="save" onclick="saveGroup()" /></td></tr>
+			</table>
+		</div>
+
+		<div id="update_group">
+			<table>
+				<input type="hidden" id="upid" />
+				<tr><td>groupId:</td><td><input type="text" id="upGroupId" /></td></tr>
+				<tr><td>groupName: </td><td><input type="text" id="upGroupName" /></td></tr>
+				<tr><td><input type="button" value="save" onclick="upGroup()" /></td></tr>
+			</table>
+		</div>
+
+
+		<div id="update_form">
+			<table>
+				<input type="hidden" id="uid" />
+				<input type="hidden" id="ugid" />
+				<tr><td>linkName:</td><td><input type="text" id="ulinkName" /></td></tr>
+				<tr><td>linkUrl: </td><td><input type="text" id="ulinkUrl" /></td></tr>
+				<tr><td>descripton:</td><td><textarea id="ulinkComment"></textarea></td></tr>
+				<tr><td><input type="button" value="save" onclick="updateLink()" /></td></tr>
+			</table>
+		</div>
+				<hr>
+导航管理操作：<a name="index" href="/" >返回导航主页</a>&nbsp;&nbsp;
+              <a name="add" href="#add_form">添加链接</a>&nbsp;&nbsp;
+              <a name="addGroup" href="#add_group">添加导航分组</a>&nbsp;&nbsp;
+              <a href="javascript:dofresh_data()">刷新内存</a>&nbsp;&nbsp;不支持IE，请使用用Chrome和FireFox。
+
+
+		<hr>
+		<table class="list" cellspacing="1" border="0" width="100%">
+			<thead>
+				<tr>
+				<th>链接名称</th>
+				<th>链接地扯</th>
+				<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			$for urlLink in params.urls:
+				<tr>
+					<td>$urlLink[2]</td>
+					<td>$urlLink[0]</td>
+					<td>
+                                    &nbsp;<a href="javascript:showUpdateForm('$urlLink[0]','$urlLink[2]','$urlLink[1]','$urlLink[3]','$urlLink[4]')">Edit</a>
+                                    &nbsp;<a href="javascript:doDelete($urlLink[1],$urlLink[2])">Del</a>
+					</td>
+				</tr>
+
+			<thead>
+				<tr>
+				<th>分组ID</th>
+				<th>分组名称</th>
+				<th>操作</th>
+				</tr>
+			</thead>
+			$for group in params.groups:
+				<tr>
+					<td>$group[1]</td>
+					<td>$group[0]</td>
+					<td>
+                                    &nbsp;<a href="javascript:showUpGroupForm('$group[1]','$group[0]','$group[2]')">Edit</a>
+                                    &nbsp;<a href="javascript:doGroupDelete($group[1],$group[2])">Del</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		</div>
+		<div style="display:none"><a name="update" href="#update_form">update</a></a>
+		<div style="display:none"><a name="updateGroup" href="#update_group">updateGroup</a></a>
+		<div style="display:none"><a name="add" href="#add_form">add</a></a> 
+		<div style="display:none"><a name="addGroup" href="#add_group">addGroup</a></a> 
+	</body>
+</html>
