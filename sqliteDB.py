@@ -1,8 +1,7 @@
 import sqlite3
 
 g_urls_map = {}
-g_urls = []
-g_groups = []
+g_groups  = []
 
 
 def getConnection():
@@ -82,7 +81,7 @@ def getAllGid():
 
 
 def getAllUrlsMap(groups):
-    conn = getConnection()
+
     urls_map = {}
     for gid in groups:
         tmpMap = {}
@@ -94,11 +93,10 @@ def getAllUrlsMap(groups):
 
 def refreshMem():
     global g_groups
-    global g_urls
     global g_urls_map
     groups = getAllGid()
-    urls = getAllHttpUrls()
     urls_map = getAllUrlsMap(groups)
     g_urls_map = urls_map
     g_groups = groups
-    g_urls = urls
+
+

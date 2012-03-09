@@ -37,7 +37,7 @@ class index:
 
 class elink:
     def GET(self):
-        urls = db.g_urls
+        urls = db.getAllHttpUrls()
         groups = db.g_groups
         params = web.Storage(locals())
         return render.elink(params)
