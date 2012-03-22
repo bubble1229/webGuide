@@ -3,6 +3,7 @@
 概述：
   适用于小团队建立自己的导航，利于新同学，也方便知识库的引导与分享。
   python开发，200行代码。
+  搭建的一个网站：测试人导航 http://nobug.sinaapp.com/
 
 一、需要安装的软件：
   1.python,下载地址：http://www.python.org/ftp
